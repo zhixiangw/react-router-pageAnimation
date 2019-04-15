@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "baseUrl": ".",
+    "paths": {
+      "containers/*": ["./src/containers/*"]
+    }
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}

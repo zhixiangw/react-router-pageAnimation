@@ -1,0 +1,48 @@
+{
+  "extends": ["eslint:recommended", "plugin:react/recommended"],
+  "parserOptions": {
+    "ecmaVersion": 8,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true,
+      "classes": true,
+      "arrowFunctions":true,
+      "objectLiteralShorthandMethods": true,
+      "modules": true,
+      "objectLiteralShorthandProperties": true,
+      "restParams": true,
+      "forOf": true,
+      "experimentalObjectRestSpread": true,
+      "templateStrings": true,
+      "superInFunctions": true
+    }
+  },
+  "plugins": [
+    "react"
+  ],
+  "parser": "babel-eslint",
+  "env": {
+    "browser": true,
+    "node": true,
+    "commonjs": true
+  },
+  "rules": {
+    "quotes": [2, "single"],
+    "no-unused-vars": 0,
+    "no-console": 0,
+    "no-undef": 0,
+    "react/display-name": 1,
+    "react/jsx-boolean-value": 1,
+    "react/jsx-no-undef": 1,
+    "react/jsx-uses-react": 1,
+    "react/jsx-uses-vars": 1,
+    "react/no-did-mount-set-state": 1,
+    "react/no-did-update-set-state": 1,
+    "react/no-multi-comp": 1,
+    "react/no-unknown-property": 1,
+    "react/prop-types": 0,
+    "react/react-in-jsx-scope": 1,
+    "react/self-closing-comp": 1,
+    "react/sort-comp": 1
+  }
+}
