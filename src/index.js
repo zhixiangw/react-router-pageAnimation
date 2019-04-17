@@ -14,7 +14,6 @@ import Page4 from 'containers/Page4'
 const appHistoryStack = [window.location.href]
 const replaceState = history.replaceState
 const pushState = history.pushState
-let useAppAction = true
 let appAction = 'FORWARD'
 
 history.replaceState = function() {
@@ -33,14 +32,10 @@ window.addEventListener('hashchange', (HashChangeEvent) => {
   if (newURLIndex === -1) {
     appHistoryStack.push(newURL)
   }
-  if (!useAppAction) {
-    if (newURLIndex === -1 || newURLIndex - oldURLIndex > 0) {
-      appAction = 'FORWARD'
-    } else {
-      appAction = 'GOBACK'
-    }
+  if (newURLIndex === -1 || newURLIndex - oldURLIndex > 0) {
+    appAction = 'FORWARD'
   } else {
-    useAppAction = true
+    appAction = 'GOBACK'
   }
 })
 
@@ -49,7 +44,6 @@ ReactDOM.render((
     <Route render={({ location, history }) => {
       let animationClassName = ''
       if (['PUSH', 'REPLACE'].includes(history.action)) {
-        useAppAction = false
         animationClassName = 'slide-left'
       } else {
         animationClassName = appAction === 'FORWARD' ? 'slide-left' : 'slide-right'
