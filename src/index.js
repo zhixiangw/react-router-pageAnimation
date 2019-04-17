@@ -11,7 +11,7 @@ import Page3 from 'containers/Page3'
 import Page4 from 'containers/Page4'
 
 // 一个不准确的 appHistoryStack，不对外暴露接口，不能当做历史记录参考
-const appHistoryStack = [window.location.href]
+const appHistoryStack = sessionStorage.getItem('appHistoryStack') && JSON.parse(sessionStorage.getItem('appHistoryStack')) || [window.location.href]
 const replaceState = history.replaceState
 const pushState = history.pushState
 let appAction = 'FORWARD'
@@ -50,7 +50,7 @@ ReactDOM.render((
       }
       return (
         <TransitionGroup className={animationClassName}>
-          <CSSTransition key={location.pathname} classNames="animation" timeout={304}>
+          <CSSTransition key={location.pathname} onEntered={() => sessionStorage.setItem('appHistoryStack', JSON.stringify(appHistoryStack))} classNames="animation" timeout={304}>
             <Switch location={location}>
               <Route exact path="/page1" component={Page1}/>
               <Route exact path="/page2" component={Page2}/>
