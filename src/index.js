@@ -20,7 +20,10 @@ let onAnimation = false
 let animationClassName = ''
 
 history.replaceState = function() {
-  setTimeout(() => appHistoryStack.splice(-1, 1, window.location.href.split('?')[0]), 0)
+  setTimeout(() => {
+    const newHref = window.location.href.split('?')[0]
+    appHistoryStack.splice(appHistoryStack.indexOf(newHref), 1, newHref)
+  }, 0)
   replaceState.apply(history, arguments)
 }
 history.pushState = function() {
@@ -33,10 +36,10 @@ window.addEventListener('hashchange', (HashChangeEvent) => {
   const newURLHash = newURL.split('?')[0]
   const oldURLHash = oldURL.split('?')[0]
   if (newURLHash !== oldURLHash) {
-    const newURLIndex = appHistoryStack.indexOf(newURL)
-    const oldURLIndex = appHistoryStack.indexOf(oldURL)
+    const newURLIndex = appHistoryStack.indexOf(newURLHash)
+    const oldURLIndex = appHistoryStack.indexOf(oldURLHash)
     if (newURLIndex === -1) {
-      appHistoryStack.push(newURL)
+      appHistoryStack.push(newURLHash)
     }
     if (newURLIndex === -1 || newURLIndex - oldURLIndex > 0) {
       appAction = 'FORWARD'
@@ -44,7 +47,7 @@ window.addEventListener('hashchange', (HashChangeEvent) => {
       appAction = 'GOBACK'
     }
   } else {
-    appHistoryStack.splice(appHistoryStack.indexOf(newURL), 1, newURL)
+    appHistoryStack.splice(newURLHash, 1, newURLHash)
   }
 })
 
