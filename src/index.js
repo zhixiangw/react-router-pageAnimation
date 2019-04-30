@@ -11,35 +11,43 @@ import Page3 from 'containers/Page3'
 import Page4 from 'containers/Page4'
 
 // 一个不准确的 appHistoryStack，不对外暴露接口，不能当做历史记录参考
-const setStorage = false
-const appHistoryStack = setStorage && sessionStorage.getItem('appHistoryStack') && JSON.parse(sessionStorage.getItem('appHistoryStack')) || [window.location.href]
+const setStorage = true
+const appHistoryStack = setStorage && sessionStorage.getItem('appHistoryStack') && JSON.parse(sessionStorage.getItem('appHistoryStack')) || [getPathname(window.location.href)]
 const replaceState = history.replaceState
 const pushState = history.pushState
 let appAction = 'FORWARD'
 let onAnimation = false
 let animationClassName = ''
 
+function getPathname(url) {
+  if (url.indexOf('#/') !== -1) {
+    const hash = url.split('#/')[1]
+    return hash.split('?')[0]
+  }
+  return window.location.pathname
+}
+
 history.replaceState = function() {
   setTimeout(() => {
-    const newHref = window.location.href.split('?')[0]
-    appHistoryStack.splice(appHistoryStack.indexOf(newHref), 1, newHref)
+    const newPathname = getPathname(window.location.href)
+    appHistoryStack.splice(appHistoryStack.indexOf(newPathname), 1, newPathname)
   }, 0)
   replaceState.apply(history, arguments)
 }
 history.pushState = function() {
-  setTimeout(() => appHistoryStack.push(window.location.href.split('?')[0]), 0)
+  setTimeout(() => appHistoryStack.push(getPathname(window.location.href)), 0)
   pushState.apply(history, arguments)
 }
 
 window.addEventListener('hashchange', (HashChangeEvent) => {
   const { newURL, oldURL } = HashChangeEvent
-  const newURLHash = newURL.split('?')[0]
-  const oldURLHash = oldURL.split('?')[0]
-  if (newURLHash !== oldURLHash) {
-    const newURLIndex = appHistoryStack.indexOf(newURLHash)
-    const oldURLIndex = appHistoryStack.indexOf(oldURLHash)
+  const newURLPathname = getPathname(newURL)
+  const oldURLPathname = getPathname(oldURL)
+  if (newURLPathname !== oldURLPathname) {
+    const newURLIndex = appHistoryStack.indexOf(newURLPathname)
+    const oldURLIndex = appHistoryStack.indexOf(oldURLPathname)
     if (newURLIndex === -1) {
-      appHistoryStack.push(newURLHash)
+      appHistoryStack.push(newURLPathname)
     }
     if (newURLIndex === -1 || newURLIndex - oldURLIndex > 0) {
       appAction = 'FORWARD'
@@ -47,7 +55,7 @@ window.addEventListener('hashchange', (HashChangeEvent) => {
       appAction = 'GOBACK'
     }
   } else {
-    appHistoryStack.splice(newURLHash, 1, newURLHash)
+    appHistoryStack.splice(newURLPathname, 1, newURLPathname)
   }
 })
 
